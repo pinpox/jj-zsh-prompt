@@ -2,7 +2,8 @@
 
 An async [Jujutsu](https://github.com/martinvonz/jj) and Git prompt for Zsh, inspired by [Pure](https://github.com/sindresorhus/pure).
 
-<img width="1388" height="86" alt="image" src="https://github.com/user-attachments/assets/ad3f274b-29c1-445d-b231-15103c6d29b7" />
+
+<img width="2312" height="150" alt="image" src="https://github.com/user-attachments/assets/d7623a34-e92a-423e-b587-0da67d199348" />
 
 
 ## Features
