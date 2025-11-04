@@ -52,8 +52,6 @@ When in a git repository (but not jj):
 
 ## Installation
 
-### Manual
-
 1. Clone this repository:
    ```bash
    git clone https://github.com/pinpox/jj-zsh-prompt.git ~/.zsh/jj-zsh-prompt
@@ -73,42 +71,7 @@ When in a git repository (but not jj):
    source ~/.zsh/jj-zsh-prompt/jj-zsh-prompt.plugin.zsh
    ```
 
-### zinit
-
-```bash
-# In your ~/.zshrc
-zinit light mafredri/zsh-async
-zinit light pinpox/jj-zsh-prompt
-```
-
-### antigen
-
-```bash
-# In your ~/.zshrc
-antigen bundle mafredri/zsh-async
-antigen bundle pinpox/jj-zsh-prompt
-```
-
-### zplug
-
-```bash
-# In your ~/.zshrc
-zplug "mafredri/zsh-async", from:github
-zplug "pinpox/jj-zsh-prompt", from:github
-```
-
-### Oh-My-Zsh
-
-1. Clone the repository into custom plugins:
-   ```bash
-   git clone https://github.com/pinpox/jj-zsh-prompt.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/jj-zsh-prompt
-   git clone https://github.com/mafredri/zsh-async.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-async
-   ```
-
-2. Add to your `~/.zshrc` plugins array:
-   ```bash
-   plugins=(... zsh-async jj-zsh-prompt)
-   ```
+Or use your favorite zsh plugin manager
 
 ### Nix / NixOS / Home Manager
 
@@ -165,66 +128,17 @@ export JJ_COLOR_STATS="%F{blue}"             # File stats
 # Git colors
 export JJ_COLOR_GIT_BRANCH="%F{240}"         # Branch name (grey)
 export JJ_COLOR_GIT_ARROWS="%F{cyan}"        # Ahead/behind arrows
+
+# Prompt character
+export JJ_PROMPT_CHAR="❯"                    # Default is ➜
+
+# Debugging
+export JJ_DEBUG=1                            # Adds debug output
 ```
 
-### Customizing Prompt Character
-
-```bash
-export JJ_PROMPT_CHAR="❯"  # Default is ➜
-```
-
-### Custom Prompt Integration
-
-If you want to build your own prompt using `prompt_jj()`:
-
-```bash
-# Disable auto-setup
-export JJ_PROMPT_AUTO_SETUP=0
-
-# Load the plugin
-source ~/.zsh/jj-zsh-prompt/jj-zsh-prompt.plugin.zsh
-
-# Create your own prompt
-PROMPT='%~ $(prompt_jj) %# '
-```
-
-### Debugging
-
-Enable debug mode to troubleshoot:
-
-```bash
-export JJ_DEBUG=1
-```
-
-## How It Works
-
-The prompt uses `zsh-async` to run `jj` commands in the background, keeping your shell responsive even in large repositories. When you enter a directory:
-
-1. The prompt displays cached information (empty on first run)
-2. An async job starts to gather fresh jj/git data
-3. When the job completes, the prompt updates automatically
-
-Git information is calculated synchronously since git operations are typically fast enough.
-
-## Comparison with Similar Projects
+## Thanks to
 
 - **[Pure](https://github.com/sindresorhus/pure)**: Inspiration for this prompt; focused on git
 - **[Powerlevel10k](https://github.com/romkatv/powerlevel10k)**: More features but heavier; no native jj support
 - **[Starship](https://starship.rs/)**: Rust-based, fast, but different approach
-
-## Contributing
-
-Issues and pull requests are welcome! Please ensure:
-- Code follows the existing style
-- Debug mode works correctly
-- Both jj and git fallbacks are tested
-
-## License
-
-MIT License - see [LICENSE](LICENSE) file for details
-
-## Credits
-
-- Inspired by [Pure](https://github.com/sindresorhus/pure) by Sindre Sorhus
-- Uses [zsh-async](https://github.com/mafredri/zsh-async) by Mathias Fredriksson
-- Built for [Jujutsu](https://github.com/martinvonz/jj)
+- **[zsh-async](https://github.com/mafredri/zsh-async)**: by Mathias Fredriksson
