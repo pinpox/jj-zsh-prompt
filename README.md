@@ -2,7 +2,6 @@
 
 An async [Jujutsu](https://github.com/martinvonz/jj) and Git prompt for Zsh, inspired by [Pure](https://github.com/sindresorhus/pure).
 
-
 <img width="2312" height="150" alt="image" src="https://github.com/user-attachments/assets/d7623a34-e92a-423e-b587-0da67d199348" />
 
 
@@ -73,45 +72,7 @@ When in a git repository (but not jj):
 
 Or use your favorite zsh plugin manager
 
-### Nix / NixOS / Home Manager
-
-#### Flake Input
-
-Add to your `flake.nix`:
-```nix
-{
-  inputs = {
-    jj-zsh-prompt.url = "github:pinpox/jj-zsh-prompt";
-    jj-zsh-prompt.flake = false;
-  };
-}
-```
-
-#### Home Manager Configuration
-
-```nix
-{ pkgs, inputs, ... }:
-{
-  programs.zsh = {
-    plugins = [
-      {
-        name = "zsh-async";
-        src = pkgs.zsh-async;
-        file = "share/zsh-async/async.zsh";
-      }
-      {
-        name = "jj-zsh-prompt";
-        src = inputs.jj-zsh-prompt;
-        file = "jj-zsh-prompt.plugin.zsh";
-      }
-    ];
-  };
-}
-```
-
 ## Configuration
-
-### Customizing Colors
 
 Set these variables before loading the plugin:
 
