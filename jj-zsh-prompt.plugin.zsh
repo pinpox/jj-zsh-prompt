@@ -59,6 +59,7 @@ typeset -g JJ_COLOR_RESET="%f"
 # Global variables for async
 typeset -g _jj_display=""
 typeset -g _jj_last_workspace=""
+typeset -g _jj_expected_workspace=""  # Workspace we're waiting for results from
 
 # Async worker function - this runs in background
 _jj_async_worker() {
@@ -73,12 +74,12 @@ _jj_async_worker() {
   fi
   _jj_debug "Worker: jj command found"
 
-  # Check if we're in a jj workspace
-  if ! jj workspace root --ignore-working-copy &>/dev/null 2>&1; then
-    _jj_debug "Worker: not in a jj workspace"
+  # Change to the workspace directory so jj commands run in the correct repo
+  cd "$workspace" || {
+    _jj_debug "Worker: failed to cd to workspace"
     echo ""
     return
-  fi
+  }
   _jj_debug "Worker: in jj workspace"
 
   # Get change/commit IDs and other info in parseable format
@@ -176,6 +177,8 @@ _jj_async_worker() {
   fi
 
   _jj_debug "Worker: final result: $result"
+  # Prepend workspace path (separated by newline) so callback can validate
+  echo "$workspace"
   echo "$result"
 }
 
@@ -185,18 +188,29 @@ _jj_async_callback() {
   local return_code=$2
   local output=$3
 
+  # Parse output: first line is workspace, rest is the prompt
+  local -a lines
+  lines=("${(@f)output}")  # Split by newlines
+  local worker_workspace="${lines[1]}"
+  local prompt_content="${lines[2]}"
+
   # Get the current workspace (callback runs in main shell, so this is fast)
-  local workspace=$(jj workspace root --ignore-working-copy 2>/dev/null)
+  local current_workspace=$(jj workspace root --ignore-working-copy 2>/dev/null)
 
-  _jj_debug "Callback: received output (return_code=$return_code, workspace=$workspace): $output"
+  _jj_debug "Callback: worker workspace='$worker_workspace', current workspace='$current_workspace'"
 
-  # Update the display variable and workspace
-  _jj_display=$output
-  _jj_last_workspace=$workspace
+  # Only update display if we're still in the workspace the worker processed
+  if [[ "$worker_workspace" == "$current_workspace" ]]; then
+    _jj_debug "Callback: workspaces match, updating display"
+    _jj_display=$prompt_content
+    _jj_last_workspace=$current_workspace
 
-  _jj_debug "Callback: updated _jj_display='$_jj_display' and _jj_last_workspace='$_jj_last_workspace', triggering prompt redraw"
-  # Trigger prompt redraw
-  zle && zle reset-prompt
+    _jj_debug "Callback: updated _jj_display='$_jj_display', triggering prompt redraw"
+    # Trigger prompt redraw
+    zle && zle reset-prompt
+  else
+    _jj_debug "Callback: workspace changed (worker='$worker_workspace' current='$current_workspace'), discarding stale result"
+  fi
 }
 
 # Function to show git info when not in jj repo
@@ -254,14 +268,16 @@ prompt_jj() {
     _jj_debug "prompt_jj: not in jj workspace, trying git"
     _jj_display=""
     _jj_last_workspace=""
+    _jj_expected_workspace=""
     _prompt_git
     return
   fi
 
-  # If workspace changed, clear cache
+  # If workspace changed, clear cache and expected workspace
   if [[ $workspace != $_jj_last_workspace ]]; then
     _jj_debug "prompt_jj: workspace changed (old='$_jj_last_workspace' new='$workspace'), clearing cache"
     _jj_display=""
+    _jj_expected_workspace=""
   fi
 
   # Always update last workspace
@@ -282,8 +298,12 @@ _jj_precmd() {
 
   if [[ -z $workspace ]]; then
     _jj_debug "precmd: not in jj workspace, skipping async job"
+    _jj_expected_workspace=""
     return
   fi
+
+  # Store the workspace we're expecting results for
+  _jj_expected_workspace=$workspace
 
   # Start async job
   _jj_debug "precmd: starting async job with workspace=$workspace"
