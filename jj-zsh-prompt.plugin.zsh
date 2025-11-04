@@ -244,7 +244,8 @@ _prompt_git() {
   fi
 
   # Display: branch name and dirty marker in grey, arrows in cyan
-  local result=" ${JJ_COLOR_GIT_BRANCH}${branch}${dirty}${JJ_COLOR_RESET}"
+  # No leading space - the main function adds it
+  local result="${JJ_COLOR_GIT_BRANCH}${branch}${dirty}${JJ_COLOR_RESET}"
   [[ -n $arrows ]] && result+="${JJ_COLOR_GIT_ARROWS}${arrows}${JJ_COLOR_RESET}"
   echo -n "$result"
 }
@@ -256,7 +257,8 @@ prompt_jj() {
   # Check if jj is installed
   if ! command -v jj &>/dev/null; then
     _jj_debug "prompt_jj: jj not found, trying git"
-    _prompt_git
+    local git_info=$(_prompt_git)
+    [[ -n $git_info ]] && echo -n " $git_info"
     return
   fi
 
@@ -269,7 +271,8 @@ prompt_jj() {
     _jj_display=""
     _jj_last_workspace=""
     _jj_expected_workspace=""
-    _prompt_git
+    local git_info=$(_prompt_git)
+    [[ -n $git_info ]] && echo -n " $git_info"
     return
   fi
 
@@ -284,8 +287,9 @@ prompt_jj() {
   _jj_last_workspace=$workspace
 
   # Display cached result (may be empty on first run)
+  # Add leading space if we have content to display
   _jj_debug "prompt_jj: displaying cached result: $_jj_display"
-  echo -n "$_jj_display"
+  [[ -n $_jj_display ]] && echo -n " $_jj_display" || echo -n ""
 }
 
 # Precmd hook - triggers async update before each prompt
