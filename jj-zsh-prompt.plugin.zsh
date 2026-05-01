@@ -45,15 +45,15 @@ _jj_debug "zsh-async found and loaded"
 setopt prompt_subst
 
 # Color configuration - users can override these
-typeset -g JJ_COLOR_CHANGE_ID="${JJ_COLOR_CHANGE_ID:-%F{magenta}}"       # Unique prefix of change ID
-typeset -g JJ_COLOR_CHANGE_REST="${JJ_COLOR_CHANGE_REST:-%F{240}}"       # Rest of change ID (grey)
-typeset -g JJ_COLOR_COMMIT_ID="${JJ_COLOR_COMMIT_ID:-%F{cyan}}"          # Unique prefix of commit ID
-typeset -g JJ_COLOR_COMMIT_REST="${JJ_COLOR_COMMIT_REST:-%F{240}}"       # Rest of commit ID (grey)
-typeset -g JJ_COLOR_STATUS="${JJ_COLOR_STATUS:-%F{red}}"
-typeset -g JJ_COLOR_BOOKMARK="${JJ_COLOR_BOOKMARK:-%F{magenta}}"
-typeset -g JJ_COLOR_STATS="${JJ_COLOR_STATS:-%F{blue}}"
-typeset -g JJ_COLOR_GIT_BRANCH="${JJ_COLOR_GIT_BRANCH:-%F{240}}"         # Git branch (grey)
-typeset -g JJ_COLOR_GIT_ARROWS="${JJ_COLOR_GIT_ARROWS:-%F{cyan}}"        # Git ahead/behind arrows
+typeset -g JJ_COLOR_CHANGE_ID="${JJ_COLOR_CHANGE_ID:-"%F{magenta}"}"       # Unique prefix of change ID
+typeset -g JJ_COLOR_CHANGE_REST="${JJ_COLOR_CHANGE_REST:-"%F{240}"}"       # Rest of change ID (grey)
+typeset -g JJ_COLOR_COMMIT_ID="${JJ_COLOR_COMMIT_ID:-"%F{cyan}"}"          # Unique prefix of commit ID
+typeset -g JJ_COLOR_COMMIT_REST="${JJ_COLOR_COMMIT_REST:-"%F{240}"}"       # Rest of commit ID (grey)
+typeset -g JJ_COLOR_STATUS="${JJ_COLOR_STATUS:-"%F{red}"}"
+typeset -g JJ_COLOR_BOOKMARK="${JJ_COLOR_BOOKMARK:-"%F{magenta}"}"
+typeset -g JJ_COLOR_STATS="${JJ_COLOR_STATS:-"%F{blue}"}"
+typeset -g JJ_COLOR_GIT_BRANCH="${JJ_COLOR_GIT_BRANCH:-"%F{240}"}"         # Git branch (grey)
+typeset -g JJ_COLOR_GIT_ARROWS="${JJ_COLOR_GIT_ARROWS:-"%F{cyan}"}"        # Git ahead/behind arrows
 typeset -g JJ_COLOR_RESET="%f"
 
 # Global variables for async
