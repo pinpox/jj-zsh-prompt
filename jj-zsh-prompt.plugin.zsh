@@ -144,9 +144,9 @@ _jj_async_worker() {
   # Build prompt
   local result="$jj_output"
 
-  # Add bookmark if present (magenta and bold)
+  # Add bookmark if present (bold)
   if [[ -n $bookmark && $bookmark != "" ]]; then
-    result="$result %F{magenta}%B$bookmark%b$JJ_COLOR_RESET"
+    result="$result ${JJ_COLOR_BOOKMARK}%B$bookmark%b$JJ_COLOR_RESET"
   fi
 
   # Get ahead count if we have a bookmark
